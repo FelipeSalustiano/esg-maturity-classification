@@ -5,3 +5,4 @@ __pycache__/
 .vscode/
 .ipynb_checkpoints/
 airflow/logs/
+airflow/config/airflow.cfg
