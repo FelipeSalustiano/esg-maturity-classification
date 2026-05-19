@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.vscode/
+.ipynb_checkpoints/
+airflow/logs/
