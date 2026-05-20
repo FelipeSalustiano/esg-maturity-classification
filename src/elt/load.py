@@ -22,9 +22,10 @@ def load_data(filepath: str):
             f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
         )
 
-        df = extract_data(filepath)
+        df = extract_data()
+        df.to_csv(filepath, index=False)
         df.to_sql(
-            name="ESGreportingBRONZE",
+            name="esg_reporting_bronze",
             con=engine,
             if_exists="replace",
             index=False

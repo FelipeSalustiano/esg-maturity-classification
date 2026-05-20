@@ -27,22 +27,19 @@ def esg_elt_pipline():
 
     @task
     def extract():
-        extract_data("data/bronze/ESGreporting.csv")
+        extract_data()
     
     @task
     def load():
-        load_data("data/bronze/ESGreporting.csv")
+        load_data("data/bronze/esg_reporting_bronze.csv")
     
     @task
     def silver():
-        silver_transformer("data/silver/ESGreportingSILVER.csv")
+        silver_transformer("data/silver/esg_reporting_silver.csv")
 
     @task
     def gold():
-        gold_transformer(
-            silver_file= "data/silver/ESGreportingSILVER.csv",
-            filepath="data/gold/ESGreportingGOLD.csv"
-            )
+        gold_transformer("data/gold/esg_reporting_gold.csv")
 
     extract() >> load() >> silver() >> gold()
 
