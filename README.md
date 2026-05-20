@@ -119,7 +119,7 @@ jupyter notebook notebooks/
 
 ---
 
-## 📊 Principais Tecnologias
+## Principais Tecnologias
 
 | Tecnologia | Uso |
 |---|---|
