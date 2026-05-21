@@ -58,7 +58,7 @@ def gold_transformer(filepath: str):
         df.to_sql(
             name="esg_reporting_gold",
             con=engine,
-            if_exists='replace',
+            if_exists="replace",
             index=False
         )
         logging.info("Criação de tabela GOLD concluída.")
