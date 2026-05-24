@@ -54,7 +54,7 @@ def gold_transformer(filepath: str):
         }
         df["total_level"] = df["total_level"].map(classes).astype("Int64")
 
-        df.to_csv(filepath, index=False)
+        df.to_parquet(filepath, index=False)
         df.to_sql(
             name="esg_reporting_gold",
             con=engine,

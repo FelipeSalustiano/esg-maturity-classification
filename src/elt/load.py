@@ -23,7 +23,7 @@ def load_data(filepath: str):
         )
 
         df = extract_data()
-        df.to_csv(filepath, index=False)
+        df.to_parquet(filepath, index=False)
         df.to_sql(
             name="esg_reporting_bronze",
             con=engine,

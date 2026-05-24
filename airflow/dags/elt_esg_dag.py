@@ -31,15 +31,15 @@ def esg_elt_pipline():
     
     @task
     def load():
-        load_data("data/bronze/esg_reporting_bronze.csv")
+        load_data("data/bronze/esg_reporting_bronze.parquet")
     
     @task
     def silver():
-        silver_transformer("data/silver/esg_reporting_silver.csv")
+        silver_transformer("data/silver/esg_reporting_silver.parquet")
 
     @task
     def gold():
-        gold_transformer("data/gold/esg_reporting_gold.csv")
+        gold_transformer("data/gold/esg_reporting_gold.parquet")
 
     extract() >> load() >> silver() >> gold()
 
