@@ -50,7 +50,7 @@ def silver_transformer(filepath: str):
             inplace=True
         )
 
-        df.to_csv(filepath, index=False)
+        df.to_parquet(filepath, index=False)
         df.to_sql(
             name="esg_reporting_silver",
             con=engine,
