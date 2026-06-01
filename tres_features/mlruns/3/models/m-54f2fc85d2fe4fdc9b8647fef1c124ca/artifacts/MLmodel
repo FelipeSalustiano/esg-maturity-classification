@@ -1,0 +1,23 @@
+artifact_path: file:c:/Users/msb_t/OneDrive/Desktop/Heldinho/esg-maturity-classification/tres_features/mlruns/3/models/m-54f2fc85d2fe4fdc9b8647fef1c124ca/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.11
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+    skops_trusted_types: null
+mlflow_version: 3.12.0
+model_id: m-54f2fc85d2fe4fdc9b8647fef1c124ca
+model_size_bytes: 5632
+model_uuid: m-54f2fc85d2fe4fdc9b8647fef1c124ca
+prompts: null
+run_id: f9bff5550d0447129d1b6070054f74f8
+utc_time_created: '2026-06-01 21:22:59.400136'
