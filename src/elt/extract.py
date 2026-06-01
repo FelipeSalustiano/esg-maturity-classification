@@ -1,6 +1,5 @@
 import pandas as pd
 import logging
-import os 
 import kagglehub
 
 def extract_data() -> pd.DataFrame:

@@ -1,0 +1,23 @@
+artifact_path: file:///C:/Users/Felip/OneDrive/Documentos/Faculdade/projetos 3/esg_project/mlruns/1/models/m-c37062e36e9d4caebe7b96e7a28e2880/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.0
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+    skops_trusted_types: null
+mlflow_version: 3.12.0
+model_id: m-c37062e36e9d4caebe7b96e7a28e2880
+model_size_bytes: 1341
+model_uuid: m-c37062e36e9d4caebe7b96e7a28e2880
+prompts: null
+run_id: fdb3ea8e81d04d22a0c5bea5cd57a052
+utc_time_created: '2026-05-31 23:49:33.660281'

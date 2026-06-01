@@ -1,7 +1,5 @@
 import pandas as pd
-import numpy as np
 import logging
-from sklearn.preprocessing import OrdinalEncoder
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
@@ -26,42 +24,36 @@ def gold_transformer(filepath: str):
 
         query = "SELECT * FROM esg_reporting_silver"
         df = pd.read_sql(query, engine)
-        
-        # Dropando colunas que não seram utilizadas no modelo de ML
-        df.drop(
-            "name", 
-            axis=1, 
-            inplace=True
-        )
 
-        # Transfomando todos os valores para lower para padronização
-        df = df.map(lambda x: x.lower() if isinstance(x, str) else x)
+        # Encoding binária da Target
+        df["target"] = (
+            df["total_level"] == "high"
+        ).astype(int)
 
-        # Aplicando OneHotEncoder na coluna "exchange"
-        df = pd.get_dummies(
-            data=df,
-            columns=["exchange"],
-            dtype=int
-        )
+        # Utilizando as features do cenário B (contém no notebook "kaggle_data_analysis" -> tópico 4.5)
+        FEATURES_B = [
+            "environment_grade",
+            "social_grade",
+            "governance_grade",
+            "exchange",
+            "currency",
+            "industry"
+        ]
 
-        # Tropando uma das colunas para evitar multicolinearidade
-        df.drop("exchange_new york stock exchange, inc.", axis=1, inplace=True)
+        gold_df = df[FEATURES_B + ["target"]]
 
-        # Aplicando OrdinalEncoder na target
-        classes = {
-            "medium": 0,
-            "high": 1,
-        }
-        df["total_level"] = df["total_level"].map(classes).astype("Int64")
+        # Salva parquet
+        gold_df.to_parquet(filepath, index=False)
 
-        df.to_parquet(filepath, index=False)
-        df.to_sql(
+        # Salva PostgreSQL
+        gold_df.to_sql(
             name="esg_reporting_gold",
             con=engine,
             if_exists="replace",
             index=False
         )
-        logging.info("Criação de tabela GOLD concluída.")
-        
+
+        logging.info("Criação da camada GOLD concluída.")
+
     except Exception as e:
         logging.error(e)
