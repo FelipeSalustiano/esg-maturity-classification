@@ -64,7 +64,7 @@ def train_xgb_model() -> XGBClassifier | None:
                 "cv_f1":        grid.cv_results_["mean_test_f1"][best_index],
             })
 
-            mlflow.sklearn.log_model(best_model, name="xgb_model")
+            mlflow.sklearn.log_model(best_model, "xgb_model")
 
             logging.info(f"XGBoost logado. Best params: {grid.best_params_}")
             return best_model
