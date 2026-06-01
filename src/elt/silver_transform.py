@@ -30,23 +30,16 @@ def silver_transformer(filepath: str):
         df.drop_duplicates(inplace=True)
         df.dropna(how="all")
 
-        # Dropando colunas redundantes e sem importância
+        # Dropando colunas sem poder preditivo
         df.drop(columns=[
-            "ticker",
-            "currency",
-            "cik",
-            "last_processing_date",
-            "industry",
-            "logo",
-            "weburl",
-            "environment_grade",
-            "social_grade",
-            "governance_level",
-            "environment_level",
-            "social_level",
-            "governance_grade",
-            "total_grade",
-            "total_score"], 
+            'ticker', 
+            'name', 
+            'logo', 
+            'weburl', 
+            'cik',
+            'last_processing_date', 
+            'total_score', 
+            'total_grade'], 
             inplace=True
         )
 

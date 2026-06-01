@@ -8,6 +8,9 @@ from src.elt.extract import extract_data
 from src.elt.load import load_data 
 from src.elt.silver_transform import silver_transformer
 from src.elt.gold_transform import gold_transformer
+from src.train_models.knn_model import train_knn_model
+from src.train_models.tree_model import train_tree_model
+from src.train_models.xgb_model import train_xgb_model
 
 @dag(
     dag_id = "elt_esg_dag",
@@ -41,6 +44,12 @@ def esg_elt_pipline():
     def gold():
         gold_transformer("data/gold/esg_reporting_gold.parquet")
 
-    extract() >> load() >> silver() >> gold()
+    @task
+    def train_models():
+        train_knn_model()
+        train_tree_model()
+        train_xgb_model()
+
+    extract() >> load() >> silver() >> gold() >> train_models()
 
 esg_elt_pipline()
