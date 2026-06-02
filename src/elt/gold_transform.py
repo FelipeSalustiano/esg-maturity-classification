@@ -32,9 +32,6 @@ def gold_transformer(filepath: str):
 
         # Utilizando as features do cenário B (contém no notebook "kaggle_data_analysis" -> tópico 4.5)
         FEATURES_B = [
-            "environment_grade",
-            "social_grade",
-            "governance_grade",
             "exchange",
             "currency",
             "industry"
