@@ -1,6 +1,5 @@
 from sklearn.preprocessing import LabelEncoder, OrdinalEncoder
 from sklearn.impute import SimpleImputer
-from src.preprocessing.data_division import get_train_test_split
 import pandas as pd
 import logging
 
@@ -15,16 +14,6 @@ def train_encoding(df_train: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
 
         X = df_train.drop(columns=["target"])
         y = df_train["target"]
-
-        # Ordinal Encoding para grades ESG
-        GRADE_ORDER = ['C', 'CCC', 'B', 'BB', 'BBB', 'A', 'AA']
-        grade_cols = ['environment_grade', 'social_grade', 'governance_grade']
-        oe = OrdinalEncoder(
-            categories=[GRADE_ORDER] * len(grade_cols),
-            handle_unknown='use_encoded_value',
-            unknown_value=-1
-        )
-        X[grade_cols] = oe.fit_transform(X[grade_cols])
 
         # Label Encoding
         exchange_encoder = LabelEncoder()

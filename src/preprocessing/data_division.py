@@ -32,7 +32,6 @@ def get_train_test_split() -> tuple[pd.DataFrame, pd.DataFrame] | None:
             df,
             test_size=0.2,
             random_state=42,
-            shuffle=True,
             stratify=df["target"]
         )
 
