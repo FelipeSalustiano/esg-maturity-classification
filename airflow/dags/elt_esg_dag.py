@@ -8,6 +8,7 @@ from src.elt.extract import extract_data
 from src.elt.load import load_data 
 from src.elt.silver_transform import silver_transformer
 from src.elt.gold_transform import gold_transformer
+from src.model_pipeline.pipeline import run_pipeline_model
 
 @dag(
     dag_id = "elt_esg_dag",
@@ -40,7 +41,11 @@ def esg_elt_pipline():
     @task
     def gold():
         gold_transformer("data/gold/esg_reporting_gold.parquet")
+    
+    @task
+    def run_pipeline():
+        run_pipeline_model()
 
-    extract() >> load() >> silver() >> gold()
+    extract() >> load() >> silver() >> gold() >> run_pipeline()
 
 esg_elt_pipline()
