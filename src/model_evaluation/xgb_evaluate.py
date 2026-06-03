@@ -18,7 +18,7 @@ mlflow.set_experiment("esg-maturity-evaluate")
 def evaluate_xgb_model() -> XGBClassifier | None:
 
     try:
-        with mlflow.start_run(run_name="xgboost"):
+        with mlflow.start_run(run_name="xgboost_evaluate"):
 
             dfs = get_train_test_split()
             if dfs is None:
@@ -61,6 +61,3 @@ def evaluate_xgb_model() -> XGBClassifier | None:
     except Exception as e:
         logging.exception(f"Erro durante treinamento do XGBoost: {e}")
         return None
-
-if __name__ == "__main__":
-    evaluate_xgb_model()
