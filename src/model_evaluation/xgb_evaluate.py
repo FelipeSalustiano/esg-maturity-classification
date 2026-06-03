@@ -49,7 +49,7 @@ def evaluate_xgb_model() -> XGBClassifier | None:
             disp.plot(cmap="Blues")
             plt.title("Confusion Matrix")
             plt.tight_layout()
-            plt.savefig("confusion_matrix.png")
+            plt.savefig("assets/confusion_matrix.png")
             plt.close()
             mlflow.log_artifact("confusion_matrix.png")
 
