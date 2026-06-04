@@ -27,7 +27,7 @@ def gold_transformer(filepath: str):
 
         # Encoding binária da Target
         df["target"] = (
-            df["total_level"] == "High"
+            df["total_level"] == "high"
         ).astype(int)
 
         # Utilizando as features do cenário B (contém no notebook "kaggle_data_analysis" -> tópico 4.5)
@@ -36,7 +36,6 @@ def gold_transformer(filepath: str):
             "currency",
             "industry"
         ]
-
         gold_df = df[FEATURES_B + ["target"]]
 
         # Salva parquet
