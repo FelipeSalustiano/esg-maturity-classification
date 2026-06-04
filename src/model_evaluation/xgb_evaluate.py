@@ -51,7 +51,7 @@ def evaluate_xgb_model() -> XGBClassifier | None:
             plt.tight_layout()
             plt.savefig("assets/confusion_matrix.png")
             plt.close()
-            mlflow.log_artifact("confusion_matrix.png")
+            mlflow.log_artifact("assets/confusion_matrix.png")
 
             mlflow.sklearn.log_model(model, "xgb_model")
 

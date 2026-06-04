@@ -9,20 +9,23 @@ logging.basicConfig(level=logging.INFO)
 def run_pipeline_model(acc_limiar=0.70, recall_limiar=0.70, precision_limiar=0.70):
 
     try:
-        logging.info("Iniciando pipeline...")
+        logging.info("Iniciando pipeline.")
+        logging.info("Buscando métricas do mlflow.")
 
-        # pegar as métricas do último run salvo no mlflow
-        logging.info("Buscando métricas do mlflow...")
+        experiment = mlflow.get_experiment_by_name("esg-maturity-evaluate")
         client = mlflow.tracking.MlflowClient()
         runs = client.search_runs(
-            experiment_ids=["0"],  
+            experiment_ids=[experiment.experiment_id],
             order_by=["start_time DESC"],
             max_results=1
         )
 
         if not runs:
-            logging.info("Nenhum run encontrado no mlflow, avaliando modelo do zero...")
+            logging.info("Nenhum run encontrado no mlflow, avaliando modelo do zero.")
             metrics = evaluate_xgb_model()
+            if metrics is None:
+                logging.error("Falha na avaliação inicial do modelo.")
+                return None
         else:
             ultimo_run = runs[0]
             metrics = {
@@ -43,22 +46,20 @@ def run_pipeline_model(acc_limiar=0.70, recall_limiar=0.70, precision_limiar=0.7
             logging.info("Modelo ok! Métricas dentro do esperado.")
             return metrics
 
-        # não passou, então vou retreinar
-        logging.info("Métricas baixas, retreinando o modelo...")
+        logging.info("Métricas baixas, retreinando o modelo.")
         train_xgb_model()
 
-        # avaliar de novo depois do treino e logar no mlflow
-        logging.info("Avaliando modelo retreinado...")
-        with mlflow.start_run():
-            metrics_novo = evaluate_xgb_model()
-            acc_novo       = metrics_novo["accuracy"]
-            recall_novo    = metrics_novo["recall"]
-            precision_novo = metrics_novo["precision"]
-            logging.info(f"Métricas novas: acc={acc_novo:.2f}, recall={recall_novo:.2f}, precision={precision_novo:.2f}")
+        logging.info("Avaliando modelo retreinado.")
+        metrics_novo = evaluate_xgb_model()
+        if metrics_novo is None:
+            logging.error("Falha na avaliação do modelo retreinado.")
+            return metrics
 
-            mlflow.log_metrics(metrics_novo)
+        acc_novo       = metrics_novo["accuracy"]
+        recall_novo    = metrics_novo["recall"]
+        precision_novo = metrics_novo["precision"]
+        logging.info(f"Métricas novas: acc={acc_novo:.2f}, recall={recall_novo:.2f}, precision={precision_novo:.2f}")
 
-        # ver se o novo ficou melhor do que o antigo
         media_antiga = (acc + recall + precision) / 3
         media_nova   = (acc_novo + recall_novo + precision_novo) / 3
 
@@ -70,4 +71,4 @@ def run_pipeline_model(acc_limiar=0.70, recall_limiar=0.70, precision_limiar=0.7
             return metrics
 
     except Exception as e:
-        logging.error(f"Deu erro no pipeline: {e}")
+        logging.error(e)
