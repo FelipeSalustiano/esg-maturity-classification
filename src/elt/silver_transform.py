@@ -43,6 +43,16 @@ def silver_transformer(filepath: str):
             inplace=True
         )
 
+        # Coloca todo o dataset para minúsculo
+        for col in df.select_dtypes(include=["object", "string"]).columns:
+            df[col] = df[col].str.lower()         
+        
+        # Modificando valores da target
+        df["total_level"] = df["total_level"].map({
+            "medium": "no high",
+            "high": "high"
+        })
+
         df.to_parquet(filepath, index=False)
         df.to_sql(
             name="esg_reporting_silver",
