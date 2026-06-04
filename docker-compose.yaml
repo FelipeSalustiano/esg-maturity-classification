@@ -83,6 +83,8 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/src:/opt/airflow/src
     - ${AIRFLOW_PROJ_DIR:-.}/data:/opt/airflow/data
+    - ${AIRFLOW_PROJ_DIR:-.}/model:/opt/airflow/model
+    - ${AIRFLOW_PROJ_DIR:-.}/assets:/opt/airflow/assets
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -340,19 +342,20 @@ services:
     image: ghcr.io/mlflow/mlflow:latest
     command: >
       mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
       --artifacts-destination /mlflow/artifacts
       --host 0.0.0.0
       --port 5001
-
-    ports:  
+    ports:
       - "5001:5001"
     volumes:
       - mlflow-artifacts:/mlflow/artifacts
+      - ${AIRFLOW_PROJ_DIR:-.}/mlflow.db:/mlflow/mlflow.db
     depends_on:
       postgres:
         condition: service_healthy
     restart: always
-
+    
 volumes:
   postgres-db-volume:
   mlflow-artifacts:
