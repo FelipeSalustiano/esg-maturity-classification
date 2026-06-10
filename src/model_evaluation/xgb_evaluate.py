@@ -53,10 +53,15 @@ def evaluate_xgb_model() -> XGBClassifier | None:
             plt.close()
             mlflow.log_artifact("assets/confusion_matrix.png")
 
-            mlflow.sklearn.log_model(model, "xgb_model")
+            mlflow.xgboost.log_model(model, "xgb_model")
 
             logging.info("Previsão realizada! Métricas salvas no MLflow.")
-            return model
+            return {
+                "accuracy":    acc,
+                "recall":      recall,
+                "precision":   precision,
+                "f1":          f1
+            } 
 
     except Exception as e:
         logging.exception(f"Erro durante treinamento do XGBoost: {e}")
