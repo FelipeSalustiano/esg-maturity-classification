@@ -9,13 +9,12 @@ import joblib
 
 logging.basicConfig(level=logging.INFO)
 
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
-mlflow.set_experiment("esg-maturity-train")
-
 
 def train_xgb_model() -> XGBClassifier | None:
 
     try:
+        mlflow.set_tracking_uri("http://mlflow:5001")
+        mlflow.set_experiment("esg-maturity-train")
         with mlflow.start_run(run_name="xgboost_train"):
 
             dfs = get_train_test_split()
@@ -50,7 +49,7 @@ def train_xgb_model() -> XGBClassifier | None:
                 },
                 refit="accuracy",
                 cv=skf,
-                n_jobs=-1,
+                n_jobs=1,
             )
             grid.fit(X, y)
 

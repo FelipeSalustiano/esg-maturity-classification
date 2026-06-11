@@ -11,13 +11,12 @@ import joblib
 
 logging.basicConfig(level=logging.INFO)
 
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
-mlflow.set_experiment("esg-maturity-evaluate")
-
 
 def evaluate_xgb_model() -> XGBClassifier | None:
 
     try:
+        mlflow.set_tracking_uri("http://mlflow:5001")
+        mlflow.set_experiment("esg-maturity-evaluate")
         with mlflow.start_run(run_name="xgboost_evaluate"):
 
             dfs = get_train_test_split()

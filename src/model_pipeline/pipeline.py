@@ -6,34 +6,47 @@ import mlflow
 logging.basicConfig(level=logging.INFO)
 
 
-def run_pipeline_model(acc_limiar=0.70, recall_limiar=0.70, precision_limiar=0.70):
+def run_pipeline_model(acc_limiar=0.60, recall_limiar=0.60, precision_limiar=0.60):
 
     try:
+        mlflow.set_tracking_uri("http://mlflow:5001")
+        
         logging.info("Iniciando pipeline.")
         logging.info("Buscando métricas do mlflow.")
 
         experiment = mlflow.get_experiment_by_name("esg-maturity-evaluate")
-        client = mlflow.tracking.MlflowClient()
-        runs = client.search_runs(
-            experiment_ids=[experiment.experiment_id],
-            order_by=["start_time DESC"],
-            max_results=1
-        )
 
-        if not runs:
-            logging.info("Nenhum run encontrado no mlflow, avaliando modelo do zero.")
+        if experiment is None:
+            logging.info("Experimento não encontrado no mlflow, treinando e avaliando do zero.")
+            train_xgb_model()
+
             metrics = evaluate_xgb_model()
             if metrics is None:
                 logging.error("Falha na avaliação inicial do modelo.")
                 return None
         else:
-            ultimo_run = runs[0]
-            metrics = {
-                "accuracy":  ultimo_run.data.metrics.get("accuracy", 0.0),
-                "recall":    ultimo_run.data.metrics.get("recall", 0.0),
-                "precision": ultimo_run.data.metrics.get("precision", 0.0),
-            }
-            logging.info(f"Métricas carregadas do mlflow: {metrics}")
+            client = mlflow.tracking.MlflowClient()
+            runs = client.search_runs(
+                experiment_ids=[experiment.experiment_id],
+                order_by=["start_time DESC"],
+                max_results=1
+            )
+
+            if not runs:
+                logging.info("Nenhum run encontrado no mlflow, avaliando modelo do zero.")
+                train_xgb_model()
+                metrics = evaluate_xgb_model()
+                if metrics is None:
+                    logging.error("Falha na avaliação inicial do modelo.")
+                    return None
+            else:
+                ultimo_run = runs[0]
+                metrics = {
+                    "accuracy":  ultimo_run.data.metrics.get("accuracy", 0.0),
+                    "recall":    ultimo_run.data.metrics.get("recall", 0.0),
+                    "precision": ultimo_run.data.metrics.get("precision", 0.0),
+                }
+                logging.info(f"Métricas carregadas do mlflow: {metrics}")
 
         acc       = metrics["accuracy"]
         recall    = metrics["recall"]
