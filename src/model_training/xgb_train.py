@@ -28,7 +28,7 @@ def train_xgb_model() -> XGBClassifier | None:
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         model = XGBClassifier(
             random_state=42,
-            eval_metric="logloss", 
+            eval_metric="logloss",
             scale_pos_weight=(y==0).sum()/(y==1).sum()
         )
 
@@ -54,11 +54,14 @@ def train_xgb_model() -> XGBClassifier | None:
             cv=skf,
             n_jobs=-1,
         )
-        grid.fit(X, y)
+
+        logging.info("Iniciando GridSearch...")
+        with joblib.parallel_backend("threading", n_jobs=-1):
+            grid.fit(X, y)
+        logging.info("GridSearch finalizado.")
 
         best_model = grid.best_estimator_
         best_index = grid.best_index_
-
 
         with mlflow.start_run(run_name="xgboost_train"):
             mlflow.log_params(grid.best_params_)

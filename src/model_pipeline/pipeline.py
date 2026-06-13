@@ -6,7 +6,7 @@ import mlflow
 logging.basicConfig(level=logging.INFO)
 
 
-def run_pipeline_model(acc_limiar=0.40, recall_limiar=0.40, precision_limiar=0.40):
+def run_pipeline_model(acc_limiar=0.70, recall_limiar=0.70, precision_limiar=0.70):
 
     try:
         mlflow.set_tracking_uri("http://mlflow:5001")
