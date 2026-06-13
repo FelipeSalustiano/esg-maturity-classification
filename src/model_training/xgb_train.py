@@ -26,7 +26,11 @@ def train_xgb_model() -> XGBClassifier | None:
         X, y = train_encoding(df_train)
 
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        model = XGBClassifier(eval_metric="logloss")
+        model = XGBClassifier(
+            random_state=42,
+            eval_metric="logloss", 
+            scale_pos_weight=(y==0).sum()/(y==1).sum()
+        )
 
         params_grid = {
             "n_estimators": [100, 200],
