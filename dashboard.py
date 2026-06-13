@@ -297,7 +297,7 @@ with st.spinner("Carregando dados e modelo…"):
         _     = load_model()
         data  = build_results(len(df))
     except Exception as exc:
-        st.error(f"Erro ao inicializar o dashboard: {exc}")
+        st.error(f"❌ Erro ao inicializar o dashboard: {exc}")
         st.stop()
 
 metrics   = data["metrics"]
@@ -330,7 +330,7 @@ with st.sidebar:
 
     page = st.radio(
         "nav",
-        ["Dashboard Executivo", "Avaliação do Modelo"],
+        ["Visão Geral do Modelo", "Avaliação Detalhada do Modelo"],
         label_visibility="collapsed",
     )
 
@@ -394,14 +394,14 @@ with st.sidebar:
 # PAGE 1 ─ EXECUTIVE DASHBOARD
 # ═════════════════════════════════════════════════════════════
 
-if page == "Dashboard Executivo":
+if page == "Visão Geral do Modelo":
 
     # ── Header ──
     st.markdown(
         f"""
         <div style="padding: 24px 0 20px;">
             <h1 style="color:{C_TEXT}; font-size:26px; font-weight:800; margin:0; letter-spacing:-0.3px;">
-                Dashboard Executivo
+                Visão Geral
             </h1>
             <p style="color:{C_MUTED}; font-size:13px; margin:6px 0 0;">
                 Visão geral das classificações de maturidade ESG e desempenho do modelo no conjunto de teste
@@ -612,14 +612,14 @@ if page == "Dashboard Executivo":
 # PAGE 2 ─ MODEL EVALUATION
 # ═════════════════════════════════════════════════════════════
 
-elif page == "🤖  Avaliação do Modelo":
+elif page == "Avaliação Detalhada do Modelo":
 
     # ── Header ──
     st.markdown(
         f"""
         <div style="padding: 24px 0 20px;">
             <h1 style="color:{C_TEXT}; font-size:26px; font-weight:800; margin:0; letter-spacing:-0.3px;">
-                Avaliação do Modelo — XGBoost
+                Avaliação Detalhada do Modelo — XGBoost
             </h1>
             <p style="color:{C_MUTED}; font-size:13px; margin:6px 0 0;">
                 Análise detalhada de desempenho, matriz de confusão e previsões individuais
@@ -800,16 +800,16 @@ elif page == "🤖  Avaliação do Modelo":
     # Filters
     f1, f2, f3 = st.columns([1, 1, 2])
     with f1:
-        filt_status = st.selectbox("Status", ["Todos", "Acertos", "Erros"])
+        filt_status = st.selectbox("Status", ["Todos", "✅ Acertos", "❌ Erros"])
     with f2:
         filt_class = st.selectbox("Classe Prevista", ["Todas", "Alto", "Não Alto"])
     with f3:
         filt_ind = st.text_input("Filtrar por Indústria", placeholder="Ex: technology, banking…")
 
     disp = result_df.copy()
-    if filt_status == "Acertos":
+    if filt_status == "✅ Acertos":
         disp = disp[disp["acerto"] == 1]
-    elif filt_status == "Erros":
+    elif filt_status == "❌ Erros":
         disp = disp[disp["acerto"] == 0]
     if filt_class != "Todas":
         disp = disp[disp["Previsto"] == filt_class]
@@ -845,7 +845,7 @@ elif page == "🤖  Avaliação do Modelo":
 
     # Build display table
     tbl = disp.copy()
-    tbl["Status"] = tbl["acerto"].map({1: "Acerto", 0: "Erro"})
+    tbl["Status"] = tbl["acerto"].map({1: "✅ Acerto", 0: "❌ Erro"})
     tbl = tbl.drop(columns=["acerto"])
     tbl.columns = ["Bolsa", "Moeda", "Indústria", "Real", "Previsto", "Status"]
     tbl = tbl.reset_index(drop=True)
@@ -868,7 +868,7 @@ elif page == "🤖  Avaliação do Modelo":
     # Download button
     csv = tbl.to_csv(index=False).encode("utf-8")
     st.download_button(
-        label="⬇️Exportar tabela (.csv)",
+        label="⬇️  Exportar tabela (.csv)",
         data=csv,
         file_name="esg_predictions.csv",
         mime="text/csv",
