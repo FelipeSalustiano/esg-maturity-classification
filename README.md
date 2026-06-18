@@ -45,7 +45,7 @@ Diante dessa limitação e visando a continuidade saudável do projeto, foi adot
 
 ## Arquitetura da Pipeline
 
-![Arquitetura da Pipeline](assets/arquitetura_pipeline.png)
+![Arquitetura da Pipeline](docs/images/arquitetura_pipeline.png)
 
 > A pipeline é inteiramente orquestrada pelo **Apache Airflow** (DAGs) e containerizada com **Docker**. O fluxo vai da extração via Kaggle API, passa pelas camadas Bronze → Silver → Gold (Supabase + Parquet), pelo pipeline de ML com XGBoost, rastreamento de experimentos no MLflow, até os dashboards no Streamlit e Metabase.
 
